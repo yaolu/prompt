@@ -1,6 +1,6 @@
-# prompt
+# Prompting
 
-## TL;DR example
+## TL;DR Examples
 ### Example Code 1
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
