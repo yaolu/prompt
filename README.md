@@ -213,7 +213,7 @@ document = (
     "Review: completely messed up\nSentiment: negative\n"
     "Review: masterpiece\nSentiment: positive\n"
     "Review: the action is stilted\nSentiment: negative\n"
-    "Review: by far the worst movie of the year\nSentiment:"
+    "Review: by far the best movie of the year\nSentiment:"
 )
 
 # Generate input IDs from the document using the tokenizer
@@ -232,4 +232,36 @@ print(output_text)
 Output: 
 `
 negative
+`
+
+### Example Code 2-3: best movie of this year (=>)
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained('gpt2')
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Review: featuring an oscar-worthy performance => Sentiment: positive\n"
+    "Review: completely messed up => Sentiment: negative\n"
+    "Review: masterpiece => Sentiment: positive\n"
+    "Review: the action is stilted => Sentiment: negative\n"
+    "Review: by far the best movie of the year => Sentiment:"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=1)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output: 
+`
+positive
 `
