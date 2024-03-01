@@ -4,7 +4,7 @@
 ### Example Code 1-1
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -37,7 +37,7 @@ We are also a member of the University of Cambridge's Computer Science Departmen
 ### Example Code 1-2
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -69,7 +69,7 @@ Output:
 ### Example Code 1-3
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -101,7 +101,7 @@ Output:
 ### Example Code 1-4
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -136,7 +136,7 @@ The University of Cambridge is a research university in the UK. It is a research
 ### Example Code 1-5
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -173,7 +173,7 @@ The University of Cambridge is a research university in the UK. It is
 
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -205,7 +205,7 @@ negative
 ### Example Code 2-2: best movie of this year
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -237,7 +237,7 @@ negative
 ### Example Code 2-3: (=>) magic
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -268,7 +268,7 @@ positive
 
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -302,7 +302,7 @@ Accuracy: 100%
 ### Example Code 2-4: use GPT-3 template
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -333,7 +333,7 @@ positive
 
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 document = (
@@ -363,4 +363,39 @@ positive
 `
 
 Accuracy: 50%
+
+## 3. Prompt Ordering: like movie you this Do?
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "featuring an oscar-worthy performance => positive\n"
+    "completely messed up => negative\n"
+    "masterpiece => positive\n"
+    "the action is stilted => negative\n"
+    "by far the worst movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=1)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output: 
+`
+positive
+`
+
+
+
 
