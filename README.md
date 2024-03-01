@@ -168,7 +168,7 @@ The University of Cambridge is a research university in the UK. It is
 `
 
 
-## 2. In-context Learning Examples
+## 2. In-context Learning: Do you like this movie?
 ### Example Code 2-1: worst movie of this year
 
 ```python
