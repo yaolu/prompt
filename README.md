@@ -62,7 +62,6 @@ print(output_text)
 Output:
 
 `
-: We are a group of computer scientists who are interested in learning about the world of computer science."
-"We are looking for people who are interested in learning about the
+: We are a group of computer scientists who are interested in learning about the world of computer science. We are looking for people who are interested in learning about the
 `
 
