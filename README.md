@@ -234,7 +234,7 @@ Output:
 negative
 `
 
-### Example Code 2-3: best movie of this year (=>)
+### Example Code 2-3: (=>) magic
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained('gpt2')
