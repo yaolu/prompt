@@ -409,5 +409,48 @@ positive, negative, positive
 `
 
 
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel    
+
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document_a = (
+    "completely messed up => negative\n"
+    "the action is stilted => negative\n"
+    "masterpiece => positive\n"
+    "featuring an oscar-worthy performance => positive\n"
+    "by far the best movie of the year =>"
+)
+
+document_b = (
+    "featuring an oscar-worthy performance => positive\n"
+    "masterpiece => positive\n"
+    "completely messed up => negative\n"
+    "the action is stilted => negative\n"
+    "by far the best movie of the year =>"
+)
+
+document_c = (
+    "completely messed up => negative\n"
+    "featuring an oscar-worthy performance => positive\n"
+    "the action is stilted => negative\n"
+    "masterpiece => positive\n"
+    "by far the best movie of the year =>"
+)
+
+for document in [document_a, document_b, document_c]:
+    input_ids = tokenizer.encode(document, return_tensors='pt')
+    model_output = model.generate(input_ids, do_sample=False, max_new_tokens=1)
+    output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+    print(output_text)
+
+```
+
+Output: 
+`
+positive, positive, positive
+`
+
 
 
