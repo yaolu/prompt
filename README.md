@@ -1,7 +1,7 @@
 # Prompting
 
-## TL;DR Examples
-### Example Code 1
+## 1. TL;DR Examples
+### Example Code 1-1
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -34,7 +34,7 @@ We are also a member of the University of Cambridge's Computer Science Departmen
 
 
 
-### Example Code 2
+### Example Code 1-2
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -66,7 +66,7 @@ Output:
 : We are a group of computer scientists who are interested in learning about the world of computer science. We are looking for people who are interested in learning about the
 `
 
-### Example Code 3
+### Example Code 1-3
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -98,7 +98,7 @@ Output:
 : We are a group of computer scientists who have been working on the problem of language processing for over 20 years. We are a group of people who have been
 `
 
-### Example Code 4
+### Example Code 1-4
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -133,7 +133,7 @@ The University of Cambridge is a research university in the UK. It is a research
 `
 
 
-### Example Code 5
+### Example Code 1-5
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -167,3 +167,71 @@ The University of Cambridge
 The University of Cambridge is a research university in the UK. It is
 `
 
+
+## 2. In-context Learning Examples
+### Example Code 2-1: worst movie of this year
+
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained('gpt2')
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Review: featuring an oscar-worthy performance\nSentiment: positive\n"
+    "Review: completely messed up\nSentiment: negative\n"
+    "Review: masterpiece\nSentiment: positive\n"
+    "Review: the action is stilted\nSentiment: negative\n"
+    "Review: by far the worst movie of the year\nSentiment:"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=1)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output: 
+
+`
+negative
+`
+
+### Example Code 2-2: best movie of this year
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained('gpt2')
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Review: featuring an oscar-worthy performance\nSentiment: positive\n"
+    "Review: completely messed up\nSentiment: negative\n"
+    "Review: masterpiece\nSentiment: positive\n"
+    "Review: the action is stilted\nSentiment: negative\n"
+    "Review: by far the worst movie of the year\nSentiment:"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=1)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output: 
+
+`
+negative
+`
