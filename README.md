@@ -1,5 +1,6 @@
 # prompt
 
+Example Code
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained('gpt2')
@@ -23,4 +24,9 @@ output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
 
 # Print the output text
 print(output_text)
+```
+Output: 
+```
+We are also a member of the University of Cambridge's Computer Science Department.
+We are also a member of the University of Cambridge's Computer Science Department.
 ```
