@@ -198,7 +198,6 @@ print(output_text)
 ```
 
 Output: 
-
 `
 negative
 `
@@ -231,7 +230,6 @@ print(output_text)
 ```
 
 Output: 
-
 `
 negative
 `
