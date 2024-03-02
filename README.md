@@ -365,6 +365,9 @@ positive
 Accuracy: 50%
 
 ## 3. Prompt Ordering: like movie you this Do?
+
+### Example code 3-1: context example ordering sensitivity
+
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel    
 
@@ -451,6 +454,68 @@ Output:
 `
 positive, positive, positive
 `
+### Example code 3-2: let's take a look at distribution
 
+```python
+
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "featuring an oscar-worthy performance => positive\n"
+    "completely messed up => negative\n"
+    "masterpiece => positive\n"
+    "the action is stilted => negative\n"
+    "by far the worst movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+positive_token_id = 3967
+negative_token_id = 4633
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print(f"positive probability: {prob_dist[:, positive_token_id]}")
+print(f"negative probability: {prob_dist[:, negative_token_id]}")
+```
+
+Output: 
+`
+positive probability: tensor([0.3157]) 
+negative probability: tensor([0.2891])
+`
+
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "featuring an oscar-worthy performance => positive\n"
+    "completely messed up => negative\n"
+    "masterpiece => positive\n"
+    "the action is stilted => negative\n"
+    "by far the best movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+positive_token_id = 3967
+negative_token_id = 4633
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print(f"positive probability: {prob_dist[:, positive_token_id]}")
+print(f"negative probability: {prob_dist[:, negative_token_id]}")
+```
+Output:
+`
+positive probability: tensor([0.3802]) 
+negative probability: tensor([0.1540])
+`
 
 
