@@ -562,7 +562,9 @@ context-free negative probability: tensor([0.1094])
 `
 
 
-## 4. Label Selection: cat versus dog
+## 4. Label Selection
+
+### Example code 4-1: cat versus dog
 ```python
 
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
@@ -626,6 +628,33 @@ Output:
 `
 positive (dog) probability: tensor([0.2070])
 negative (cat) probability: tensor([0.1719])
+`
+### Example code 4-2: merge multiple tokens
+```python
+
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "featuring an oscar-worthy performance => positive\n"
+    "completely messed up => negative\n"
+    "masterpiece => positive\n"
+    "the action is stilted => negative\n"
+    "by far the worst movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print([(p.item(), tokenizer.decode(token_id)) for (p, token_id) in zip(*prob_dist[0].topk(10))])
+```
+Output:
+`
+[(0.31566739082336426, ' positive'), (0.2891405522823334, ' negative'), (0.02993960492312908, ' bad'), (0.013837959617376328, ' good'), (0.009425444528460503, ' very'), (0.008499860763549805, ' great'), (0.005330370739102364, ' terrible'), (0.004886834882199764, ' not'), (0.004764571785926819, ' perfect'), (0.004176552407443523, ' no')]
 `
 
 
