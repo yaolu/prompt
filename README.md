@@ -1,5 +1,5 @@
 # Prompting
-
+   
 ## 1. TL;DR Examples
 ### Example Code 1-1
 ```python
@@ -364,9 +364,9 @@ positive
 
 Accuracy: 50%
 
-## 3. Prompt Ordering: like movie you this Do?
+## 3. Prompt ordering and positional bias: like movie you this Do?
 
-### Example code 3-1: context example ordering sensitivity
+### Example code 3-1: context ordering sensitivity
 
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel    
@@ -559,6 +559,73 @@ context-free positive probability: tensor([0.0453])
 context-free negative probability: tensor([0.1094])
 [[22.07082467  0.        ]
  [ 0.          9.14129541]]
+`
+
+
+## 4. Label Selection: cat versus dog
+```python
+
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+# cat for positive, dog for negative
+document = (
+    "featuring an oscar-worthy performance => cat\n"
+    "completely messed up => dog\n"
+    "masterpiece => cat\n"
+    "the action is stilted => dog\n"
+    "by far the worst movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+positive_token_id = 3797
+negative_token_id = 3290
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print(f"positive (cat) probability: {prob_dist[:, positive_token_id]}")
+print(f"negative (dog) probability: {prob_dist[:, negative_token_id]}")
+```
+
+Output:
+`
+positive (cat) probability: tensor([0.1997])
+negative (dog) probability: tensor([0.1463])
+`
+
+```python
+
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+# dog for positive, cat for negative
+document = (
+    "featuring an oscar-worthy performance => dog\n"
+    "completely messed up => cat\n"
+    "masterpiece => dog\n"
+    "the action is stilted => cat\n"
+    "by far the worst movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+positive_token_id = 3290
+negative_token_id = 3797
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print(f"positive (dog) probability: {prob_dist[:, positive_token_id]}")
+print(f"negative (cat) probability: {prob_dist[:, negative_token_id]}")
+```
+Output:
+`
+positive (dog) probability: tensor([0.2070])
+negative (cat) probability: tensor([0.1719])
 `
 
 
