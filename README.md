@@ -629,7 +629,7 @@ Output:
 positive (dog) probability: tensor([0.2070])
 negative (cat) probability: tensor([0.1719])
 `
-### Example code 4-2: merge multiple tokens
+### Example code 4-2: explore label space
 ```python
 
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
