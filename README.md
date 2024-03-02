@@ -657,6 +657,63 @@ Output:
 [(0.31566739082336426, ' positive'), (0.2891405522823334, ' negative'), (0.02993960492312908, ' bad'), (0.013837959617376328, ' good'), (0.009425444528460503, ' very'), (0.008499860763549805, ' great'), (0.005330370739102364, ' terrible'), (0.004886834882199764, ' not'), (0.004764571785926819, ' perfect'), (0.004176552407443523, ' no')]
 `
 
+### Example code 4-3: open question - can we use digits?
+```python
+
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "featuring an oscar-worthy performance => 0\n"
+    "completely messed up => 1\n"
+    "masterpiece => 0\n"
+    "the action is stilted => 1\n"
+    "by far the worst movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print([(p.item(), tokenizer.decode(token_id)) for (p, token_id) in zip(*prob_dist[0].topk(10))])
+```
+Output:
+`
+[(0.43802526593208313, ' 1'), (0.34042462706565857, ' 0'), (0.10940475016832352, ' 2'), (0.021524671465158463, ' 3'), (0.013400197960436344, ' 4'), (0.00964546948671341, ' 5'), (0.004922178573906422, ' 6'), (0.004260277841240168, ' 8'), (0.003846667939797044, ' 9'), (0.003295806935057044, ' 7')]
+`
+
+```python
+
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "featuring an oscar-worthy performance => 7\n"
+    "completely messed up => 11\n"
+    "masterpiece => 7\n"
+    "the action is stilted => 11\n"
+    "by far the worst movie of the year =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print([(p.item(), tokenizer.decode(token_id)) for (p, token_id) in zip(*prob_dist[0].topk(10))])
+```
+
+Output:
+`
+[(0.18294943869113922, ' 7'), (0.09998831897974014, ' 9'), (0.09698300063610077, ' 8'), (0.08610329777002335, ' 6'), (0.0774054080247879, ' 11'), (0.06776292622089386, ' 10'), (0.06541603803634644, ' 5'), (0.04681426286697388, ' 4'), (0.03447182849049568, ' 12'), (0.027355313301086426, ' 3')]
+`
+
+
 
 
 
