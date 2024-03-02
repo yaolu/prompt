@@ -518,4 +518,50 @@ positive probability: tensor([0.3802])
 negative probability: tensor([0.1540])
 `
 
+### Example code 3-3: simple calibration
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "featuring an oscar-worthy performance => positive\n"
+    "completely messed up => negative\n"
+    "masterpiece => positive\n"
+    "the action is stilted => negative\n"
+    "N/A =>"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+positive_token_id = 3967
+negative_token_id = 4633
+with torch.inference_mode():
+    model_output = model(input_ids)
+    prob_dist = model_output.logits[:, -1, :].softmax(dim=-1)
+print(f"context-free positive probability: {prob_dist[:, positive_token_id]}")
+print(f"context-free negative probability: {prob_dist[:, negative_token_id]}")
+
+# orginal implementation: https://github.com/tonyzhaozh/few-shot-learning/blob/e04d8643be91c2cce63f33e07760ff75d5aa3ad0/run_classification.py#L121
+num_classes = 2
+p_cf = prob_dist[0, [positive_token_id, negative_token_id]].numpy()
+calibration_weight_matrix = np.linalg.inv(np.identity(num_classes) * p_cf)
+print(calibration_weight_matrix)
+
+calibrated_prob = np.matmul(calibration_weight_matrix, np.expand_dims(p_cf, axis=-1))
+# don't forget softmax
+```
+
+Output: 
+`
+context-free positive probability: tensor([0.0453])
+context-free negative probability: tensor([0.1094])
+[[22.07082467  0.        ]
+ [ 0.          9.14129541]]
+`
+
+
+
+
 
