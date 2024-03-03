@@ -747,5 +747,74 @@ Previous Output:
 [(0.31566739082336426, ' positive'), (0.2891405522823334, ' negative'), (0.02993960492312908, ' bad'), (0.013837959617376328, ' good'), (0.009425444528460503, ' very'), (0.008499860763549805, ' great'), (0.005330370739102364, ' terrible'), (0.004886834882199764, ' not'), (0.004764571785926819, ' perfect'), (0.004176552407443523, ' no')]
 `
 
+## 5. Beyond Classification - Let's do complex tasks
+
+### Example code 5-1: Can GPT2 do math?
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Q: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. Each can has 3 tennis balls. How many tennis balls does he have now?\n"
+    "A: The answer is 11.\n"
+    "Q: The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have?\n"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=16)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output:
+`
+A: The answer is 3.
+Q: Roger has a lot of money
+`
+
+
+
+
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Q: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. Each can has 3 tennis balls. How many tennis balls does he have now?\n"
+    "A: Roger started with 5 balls. 2 cans of 3 tennis balls each is 6 tennis balls. 5 + 6 = 11. The answer is 11.\n"
+    "Q: The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have?\n"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=32)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output:
+`
+A: The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have?
+Q: Roger has
+`
+
+
+
+
 
 
