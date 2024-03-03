@@ -749,7 +749,7 @@ Previous Output:
 
 ## 5. Beyond Classification - Let's do complex tasks
 
-### Example code 5-1: Can GPT2 do math?
+### Example code 5-1: Can GPT-2 do math?
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 model = GPT2LMHeadModel.from_pretrained("gpt2")
@@ -779,9 +779,6 @@ Output:
 A: The answer is 3.
 Q: Roger has a lot of money
 `
-
-
-
 
 ```python
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
@@ -813,6 +810,97 @@ A: The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more,
 Q: Roger has
 `
 
+Open question for you: Can you hack this reasoning prompt manually to make it work? 
+
+(Hint: take a look at previous slides, get some inspirations from classification tasks.)
+
+Post anything interesting you found, share it with classmates by opening an issue in this repo.
+
+### Example code 5-2: What do you think, Dr. GPT2?
+
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Q: A juggler can juggle 16 balls. Half of the balls are golf balls, and half of the golf balls are blue. How many blue golf balls are there?\n"
+    "A:"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=32)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output:
+`
+ The number of balls is determined by the number of balls in the ball. The number of balls is determined by the number of balls in the ball. The number
+`
+
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Q: A juggler can juggle 16 balls. Half of the balls are golf balls, and half of the golf balls are blue. How many blue golf balls are there?\n"
+    "A: The answer (arabic numerals) is"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=32)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output:
+`
+ 16.
+`
+
+```python
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+model = GPT2LMHeadModel.from_pretrained("gpt2")
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+document = (
+    "Q: A juggler can juggle 16 balls. Half of the balls are golf balls, and half of the golf balls are blue. How many blue golf balls are there?\n"
+    "A: Let's think step by step."
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=32)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+
+Output:
+`
+  The first ball is a ball that is about 1/4 inch long. The second ball is a ball that is about 1/4 inch long. The third
+`
 
 
 
