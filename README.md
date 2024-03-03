@@ -920,7 +920,7 @@ document = (
 input_ids = tokenizer.encode(document, return_tensors='pt')
 
 # Generate model output using the input IDs
-model_output = model.generate(input_ids, do_sample=False, max_new_tokens=64)
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=128)
 
 # Decode the model output into text using the tokenizer
 output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
