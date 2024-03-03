@@ -902,6 +902,42 @@ Output:
   The first ball is a ball that is about 1/4 inch long. The second ball is a ball that is about 1/4 inch long. The third
 `
 
+### Example code 5-3: Hey, programmer Mistral 7B
+
+```python
+from transformers import AutoTokenizer, AutoModelForCausalLM
+model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1")
+tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
+
+document = (
+    "Q: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. Each can has 3 tennis balls. How many tennis balls does he have now?\n"
+    "A: tennis_balls = 5\nbought_balls = 2 * 3\nanswer = tennis_balls + bought_balls\n"
+    "Q: The bakers at the Beverly Hills Bakery baked 200 loaves of bread on Monday morning. They sold 93 loaves in the morning and 39 loaves in the afternoon. A grocery store returned 6 unsold loaves. How many loaves of bread did they have left?\n"
+    "A:"
+)
+
+# Generate input IDs from the document using the tokenizer
+input_ids = tokenizer.encode(document, return_tensors='pt')
+
+# Generate model output using the input IDs
+model_output = model.generate(input_ids, do_sample=False, max_new_tokens=64)
+
+# Decode the model output into text using the tokenizer
+output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
+
+# Print the output text
+print(output_text)
+```
+Output:
+`
+loaves = 200
+sold_morning = 93
+sold_afternoon = 39
+returned = 6
+answer = loaves - (sold_morning + sold_afternoon + returned)
+Q: The bakers at the Beverly Hills Bakery baked 200 loaves of bread on Monday morning. They sold 93 loaves in the morning and 39 loaves in the afternoon. A grocery store returned 6 unsold loaves. How many loaves of bread did they have left?
+A: loaves =
+`
 
 
 
