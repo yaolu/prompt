@@ -929,7 +929,7 @@ output_text = tokenizer.decode(model_output[0, input_ids.shape[1]:])
 print(output_text)
 ```
 Output:
-`
+```
 loaves = 200
 sold_morning = 93
 sold_afternoon = 39
@@ -937,7 +937,7 @@ returned = 6
 answer = loaves - (sold_morning + sold_afternoon + returned)
 Q: The bakers at the Beverly Hills Bakery baked 200 loaves of bread on Monday morning. They sold 93 loaves in the morning and 39 loaves in the afternoon. A grocery store returned 6 unsold loaves. How many loaves of bread did they have left?
 A: loaves =
-`
+```
 
 
 
